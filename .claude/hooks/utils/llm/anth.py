@@ -25,16 +25,20 @@ def prompt_llm(prompt_text):
     load_dotenv()
 
     api_key = os.getenv("ANTHROPIC_API_KEY")
+    base_url = os.getenv("ANTHROPIC_BASE_URL")
     if not api_key:
         return None
 
     try:
         import anthropic
 
-        client = anthropic.Anthropic(api_key=api_key)
+        if base_url:
+            client = anthropic.Anthropic(api_key=api_key, base_url=base_url)
+        else:
+            client = anthropic.Anthropic(api_key=api_key)
 
         message = client.messages.create(
-            model="claude-3-5-haiku-20241022",  # Fastest Anthropic model
+            model="claude-sonnet-4-20250514",  # User's authorized model
             max_tokens=100,
             temperature=0.7,
             messages=[{"role": "user", "content": prompt_text}],
@@ -134,10 +138,14 @@ Name:"""
             raise Exception("No API key")
         
         import anthropic
-        client = anthropic.Anthropic(api_key=api_key)
+        base_url = os.getenv("ANTHROPIC_BASE_URL")
+        if base_url:
+            client = anthropic.Anthropic(api_key=api_key, base_url=base_url)
+        else:
+            client = anthropic.Anthropic(api_key=api_key)
         
         message = client.messages.create(
-            model="claude-3-5-haiku-20241022",  # Fast model
+            model="claude-sonnet-4-20250514",  # User's authorized model
             max_tokens=20,
             temperature=0.7,
             messages=[{"role": "user", "content": prompt_text}],
